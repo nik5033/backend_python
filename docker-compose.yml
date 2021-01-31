@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sanic_app
+    ports:
+      - "8000:8000"
+    command: sh -c
+      "cd /home/app
+      && alembic upgrade head
+      && python main.py"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    restart: always
+
+  database:
+    image: postgres:latest
+    container_name: postgres_database
+    env_file:
+      - .env
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    ports:
+    - "5433:5432"
+
