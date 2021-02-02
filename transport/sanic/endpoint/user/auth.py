@@ -2,7 +2,7 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from transport.sanic.endpoint import BaseEndpoint
-from transport.sanic.exceptions import SanicUserNotFound, SanicPassHashException
+from transport.sanic.exceptions import SanicUserNotFoundException, SanicPassHashException
 
 from api.request.auth import ReqAuthDTO
 
@@ -24,8 +24,10 @@ class AuthUserEndpoint(BaseEndpoint):
 
         try:
             db_user = user_queries.get_user(session, username=request_model.username)
+            if db_user.is_delete is True:
+                raise DBUserNotExistsException
         except DBUserNotExistsException:
-            raise SanicUserNotFound("User not found")
+            raise SanicUserNotFoundException("User not found")
 
         try:
             if check_pass(request_model.password, db_user.password):
@@ -36,7 +38,8 @@ class AuthUserEndpoint(BaseEndpoint):
                 res_body = {
                     "Authorization": create_token(payload)
                 }
-
+            else:
+                raise CheckPassHashException
         except CheckPassHashException:
             raise SanicPassHashException("Wrong password")
 

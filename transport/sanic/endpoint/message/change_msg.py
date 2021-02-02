@@ -16,6 +16,8 @@ class ChangeMsgEndpoint(BaseEndpoint):
 
         try:
             db_msg = session.get_msg_by_id(msg_id)
+            if db_msg.is_delete is True:
+                raise DBMsgNotExistsException
         except DBMsgNotExistsException:
             raise SanicMsgNotFoundException
 
@@ -41,6 +43,8 @@ class ChangeMsgEndpoint(BaseEndpoint):
     async def method_get(self, request: Request, body: dict, session: DBSession, msg_id: int, token: dict, *args, **kwargs):
         try:
             db_msg = msg_queries.get_msg(session, msg_id)
+            if db_msg.is_delete is True:
+                raise DBMsgNotExistsException
         except DBMsgNotExistsException:
             raise SanicMsgNotFoundException("Message not found")
 

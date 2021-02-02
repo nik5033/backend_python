@@ -21,7 +21,7 @@ class SanicMsgNotFoundException(SanicException):
     status_code = 404
 
 
-class SanicUserNotFound(SanicException):
+class SanicUserNotFoundException(SanicException):
     status_code = 404
 
 

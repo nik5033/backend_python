@@ -33,7 +33,7 @@ class DBSession:
         return self.query(UserModel).filter(UserModel.id == uid).first()
 
     def get_user_all(self) -> List[UserModel]:
-        return self.query(UserModel).filter(UserModel.is_delete == 0).all()
+        return self.query(UserModel).filter(UserModel.is_delete is False).all()
 
     def get_msg_by_id(self, m_id: int) -> MessageModel:
         return self.query(MessageModel).filter(MessageModel.id == m_id).first()

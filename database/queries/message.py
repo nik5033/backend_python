@@ -11,7 +11,7 @@ from database.queries.user import get_user
 def create_msg(session: DBSession, message: ReqCreateMsgDTO, sender_id: int) -> MessageModel:
     recip = get_user(session, username=message.recipient)
 
-    if recip is None:
+    if recip is None or recip.is_delete is True:
         raise DBUserNotExistsException
 
     new_msg = MessageModel(
@@ -48,8 +48,17 @@ def update_msg(session: DBSession, msg_id: int, message: ReqUpdateMsgDTO) -> Mes
     return db_msg
 
 
-def delete_msg(session: DBSession, msg_id: int):
+def full_delete_msg(session: DBSession, msg_id: int):
     db_msg = session.get_msg_by_id(msg_id)
     if db_msg is None:
         raise DBMsgNotExistsException
     session.delete(db_msg)
+
+
+def delete_msg(session: DBSession, msg_id: int):
+    db_msg = session.get_msg_by_id(msg_id)
+
+    if db_msg is None:
+        raise DBMsgNotExistsException
+
+    db_msg.is_delete = True

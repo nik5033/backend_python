@@ -8,10 +8,10 @@ from transport.sanic.endpoint import BaseEndpoint
 from api.request.send_msg import ReqCreateMsgDTO
 from api.response.get_msg import ResGetMsgDTO
 from api.response.get_all_msgs import ResGetAllMsgDTO
-from transport.sanic.exceptions import SanicUserNotFound, SanicDBException, SanicMsgNotFoundException
+from transport.sanic.exceptions import SanicDBException, SanicUserNotFoundException
 
 
-class CreateMsgEndpoint(BaseEndpoint):
+class MsgEndpoint(BaseEndpoint):
 
     async def method_post(self, request: Request, body: dict, session: DBSession, token: dict, *args,
                           **kwargs) -> BaseHTTPResponse:
@@ -21,7 +21,7 @@ class CreateMsgEndpoint(BaseEndpoint):
         try:
             db_msg = message_queries.create_msg(session, req_model, token.get('uid'))
         except DBUserNotExistsException:
-            raise SanicUserNotFound("User not found")
+            raise SanicUserNotFoundException("User not found")
 
         try:
             session.commit()
@@ -32,11 +32,9 @@ class CreateMsgEndpoint(BaseEndpoint):
 
         return await self.make_response_json(body=res_model.dump(), status=201)
 
-    async def method_get(self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs):
+    async def method_get(self, request: Request, body: dict, session: DBSession, token: dict, *args,
+                         **kwargs) -> BaseHTTPResponse:
         db_messages = message_queries.get_msgs(session, token.get('uid'))
-
-        #if db_messages is None:
-            #raise SanicMsgNotFoundException("")
 
         res_model = ResGetAllMsgDTO(db_messages, many=True)
 

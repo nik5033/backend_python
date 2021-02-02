@@ -8,10 +8,6 @@ from transport.sanic.base import SanicEndpoint
 
 def get_routes(config: ApplicationConfig, context: Context) -> Tuple[SanicEndpoint, ...]:
     return (
-        endpoint.HelloEndpoint
-        (
-            config=config, context=context, uri='/', methods=('GET',)
-        ),
         endpoint.CreateUserEndpoint(
             config=config, context=context, uri='/user', methods=('POST',)
         ),
@@ -19,9 +15,9 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple[SanicEndpoi
             config=config, context=context, uri='/auth', methods=('POST',)
         ),
         endpoint.UserEndpoint(
-            config=config, context=context, uri='/user/<uid:int>', methods=('GET', 'PATCH',), auth=True
+            config=config, context=context, uri='/user/<uid:int>', methods=('GET', 'PATCH', 'DELETE'), auth=True
         ),
-        endpoint.CreateMsgEndpoint(
+        endpoint.MsgEndpoint(
             config=config, context=context, uri='/msg', methods=('POST', 'GET',), auth=True
         ),
         endpoint.ChangeMsgEndpoint(

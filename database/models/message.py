@@ -1,4 +1,4 @@
-from sqlalchemy import Column, VARCHAR, Integer
+from sqlalchemy import Column, VARCHAR, Integer, BOOLEAN
 
 from database.models import BaseModel
 
@@ -22,3 +22,8 @@ class MessageModel(BaseModel):
         nullable=False,
     )
 
+    is_delete = Column(
+        BOOLEAN,
+        nullable=False,
+        default=False
+    )
