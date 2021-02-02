@@ -1,4 +1,3 @@
-from .hello_world import HelloEndpoint
 from .base_endpoint import BaseEndpoint
 from .user.create import CreateUserEndpoint
 from .user.auth import AuthUserEndpoint
