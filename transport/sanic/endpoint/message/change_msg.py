@@ -16,8 +16,6 @@ class ChangeMsgEndpoint(BaseEndpoint):
 
         try:
             db_msg = session.get_msg_by_id(msg_id)
-            if db_msg.is_delete is True:
-                raise DBMsgNotExistsException
         except DBMsgNotExistsException:
             raise SanicMsgNotFoundException
 

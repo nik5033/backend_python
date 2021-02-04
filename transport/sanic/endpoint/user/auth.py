@@ -19,13 +19,9 @@ class AuthUserEndpoint(BaseEndpoint):
     async def method_post(self, request: Request, body: dict, session, *args, **kwargs) -> BaseHTTPResponse:
 
         request_model = ReqAuthDTO(body)
-        status = 401
-        res_body = {}
 
         try:
             db_user = user_queries.get_user(session, username=request_model.username)
-            if db_user.is_delete is True:
-                raise DBUserNotExistsException
         except DBUserNotExistsException:
             raise SanicUserNotFoundException("User not found")
 

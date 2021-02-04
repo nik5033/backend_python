@@ -47,7 +47,7 @@ def update_user(session: DBSession, uid: int, user: ReqUpdateUserDTO) -> UserMod
 def full_delete_user(session: DBSession, uid: int):
     db_user = session.get_user_by_id(uid)
 
-    if db_user is None:
+    if db_user is None or db_user.is_delete is True:
         raise DBUserNotExistsException
 
     session.delete(db_user)
@@ -56,7 +56,7 @@ def full_delete_user(session: DBSession, uid: int):
 def delete_user(session: DBSession, uid: int):
     db_user = session.get_user_by_id(uid)
 
-    if db_user is None:
+    if db_user is None or db_user.is_delete is True:
         raise DBUserNotExistsException
 
     db_user.is_delete = True

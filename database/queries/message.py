@@ -32,7 +32,7 @@ def get_msgs(session: DBSession, uid: int) -> List[MessageModel]:
 def get_msg(session: DBSession, msg_id: int) -> MessageModel:
     db_msg = session.get_msg_by_id(msg_id)
 
-    if db_msg is None:
+    if db_msg is None or db_msg.is_delete is True:
         raise DBMsgNotExistsException
     return db_msg
 
@@ -40,7 +40,7 @@ def get_msg(session: DBSession, msg_id: int) -> MessageModel:
 def update_msg(session: DBSession, msg_id: int, message: ReqUpdateMsgDTO) -> MessageModel:
     db_msg = session.get_msg_by_id(msg_id)
 
-    if db_msg is None:
+    if db_msg is None or db_msg.is_delete is True:
         raise DBMsgNotExistsException
 
     db_msg.message = message.message
@@ -50,7 +50,7 @@ def update_msg(session: DBSession, msg_id: int, message: ReqUpdateMsgDTO) -> Mes
 
 def full_delete_msg(session: DBSession, msg_id: int):
     db_msg = session.get_msg_by_id(msg_id)
-    if db_msg is None:
+    if db_msg is None or db_msg.is_delete is True:
         raise DBMsgNotExistsException
     session.delete(db_msg)
 
@@ -58,7 +58,11 @@ def full_delete_msg(session: DBSession, msg_id: int):
 def delete_msg(session: DBSession, msg_id: int):
     db_msg = session.get_msg_by_id(msg_id)
 
-    if db_msg is None:
+    if db_msg is None or db_msg.is_delete is True:
         raise DBMsgNotExistsException
 
     db_msg.is_delete = True
+
+
+def delete_msgs(session: DBSession):
+    pass

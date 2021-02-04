@@ -1,10 +1,15 @@
 import datetime
+import os
 
 import jwt
+from dotenv import load_dotenv
 
 from helpers.auth.exceptions import ReadTokenException
 
-secret = "SUCK_MY_DICk"
+
+load_dotenv()
+
+secret = os.getenv('secret_jwt')
 
 
 def create_token(data: dict, *, lifetime: int = 1) -> str:
